@@ -14,4 +14,9 @@ resource "clo_compute_instance" "myserv" {
     external = true
     ddos_protection = false
   }
+  user_data = base64encode(<<EOT
+#cloud-config
+package_update: false
+EOT
+  )
 }

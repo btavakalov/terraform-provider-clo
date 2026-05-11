@@ -59,6 +59,13 @@ func resourceInstance() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 			},
+			"user_data": {
+				Description: "Base64-encoded cloud-init user data",
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Sensitive:   true,
+			},
 			"flavor_ram": {
 				Description: "Amount of RAM of the new instance",
 				Type:        schema.TypeInt,
@@ -299,6 +306,7 @@ func buildServerCreateBody(d *schema.ResourceData) clo_servers.ServerCreateBody 
 		Addresses: buildInstanceAddrBody(d),
 		Licenses:  buildInstanceLicenseBody(d),
 		Keypairs:  buildInstanceKeypairsBody(d),
+		UserData:  buildInstanceUserDataBody(d),
 	}
 }
 
@@ -312,6 +320,13 @@ func buildInstanceKeypairsBody(d *schema.ResourceData) (keyPairs []string) {
 		return
 	}
 	return
+}
+
+func buildInstanceUserDataBody(d *schema.ResourceData) string {
+	if v, ok := d.GetOk("user_data"); ok {
+		return v.(string)
+	}
+	return ""
 }
 
 func buildInstanceRecipeBody(d *schema.ResourceData) string {
