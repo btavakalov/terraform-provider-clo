@@ -281,9 +281,7 @@ func resourceInstanceDelete(ctx context.Context, d *schema.ResourceData, m inter
 // Helpers
 
 func buildServerDeleteBody(server *clo_servers.Server) clo_servers.ServerDeleteBody {
-	b := clo_servers.ServerDeleteBody{
-		DeleteAddresses: server.Addresses,
-	}
+	b := clo_servers.ServerDeleteBody{}
 
 	for _, d := range server.DiskData {
 		if d.StorageType == "volume" {
