@@ -4,6 +4,8 @@ go 1.21
 
 toolchain go1.22.1
 
+replace github.com/clo-ru/cloapi-go-client/v2 => ../cloapi-go-client
+
 require (
 	github.com/clo-ru/cloapi-go-client/v2 v2.0.0
 	github.com/google/uuid v1.3.0
