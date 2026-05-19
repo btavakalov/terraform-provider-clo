@@ -3,6 +3,7 @@ package clo
 import (
 	"context"
 	"errors"
+	"strings"
 	clo_lib "github.com/clo-ru/cloapi-go-client/v2/clo"
 	clo_tools "github.com/clo-ru/cloapi-go-client/v2/clo/request_tools"
 	clo_ip "github.com/clo-ru/cloapi-go-client/v2/services/ip"
@@ -27,6 +28,16 @@ func resourceIp() *schema.Resource {
 		CreateContext: resourceIpCreate,
 		UpdateContext: resourceIpUpdate,
 		DeleteContext: resourceIpDelete,
+		Importer: &schema.ResourceImporter{StateContext: func(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+			parts := strings.SplitN(d.Id(), "/", 2)
+			if len(parts) == 2 {
+				if e := d.Set("project_id", parts[0]); e != nil {
+					return nil, e
+				}
+				d.SetId(parts[1])
+			}
+			return []*schema.ResourceData{d}, nil
+		}},
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(30 * time.Minute),
 			Read:   schema.DefaultTimeout(1 * time.Minute),
@@ -137,6 +148,12 @@ func resourceIpRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 		return diag.FromErr(e)
 	}
 	if e := d.Set("is_primary", resp.Result.IsPrimary); e != nil {
+		return diag.FromErr(e)
+	}
+	if e := d.Set("ddos_protection", resp.Result.DdosProtection); e != nil {
+		return diag.FromErr(e)
+	}
+	if e := d.Set("ptr", resp.Result.Ptr); e != nil {
 		return diag.FromErr(e)
 	}
 	return nil
