@@ -31,6 +31,13 @@ resource "clo_compute_instance" "myserv" {
     external        = true
     ddos_protection = false
   }
+  # cloud-init configuration passed to the instance on the first boot.
+  user_data = base64encode(<<-EOT
+    #cloud-config
+    packages:
+      - curl
+  EOT
+  )
 }
 ```
 
@@ -54,6 +61,7 @@ resource "clo_compute_instance" "myserv" {
 - `password` (String, Sensitive) Password for the new instance
 - `recipe_id` (String) ID of the recipe that will be installed on the instance
 - `timeouts` (Block, Optional) (see [below for nested schema](#nestedblock--timeouts))
+- `user_data` (String, Sensitive) Base64-encoded cloud-init user data
 
 ### Read-Only
 

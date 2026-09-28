@@ -59,6 +59,13 @@ func resourceInstance() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 			},
+			"user_data": {
+				Description: "Base64-encoded cloud-init user data",
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Sensitive:   true,
+			},
 			"flavor_ram": {
 				Description: "Amount of RAM of the new instance",
 				Type:        schema.TypeInt,
@@ -297,6 +304,7 @@ func buildServerCreateParams(d *schema.ResourceData) cloapi.ServerCreateParams {
 		Addresses:   buildInstanceAddresses(d),
 		Licenses:    buildInstanceLicenses(d),
 		Keypairs:    buildInstanceKeypairs(d),
+		UserData:    optString(d, "user_data"),
 	}
 }
 

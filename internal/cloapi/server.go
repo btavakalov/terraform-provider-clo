@@ -99,6 +99,7 @@ type ServerCreateParams struct {
 	Addresses   []ServerAddress
 	Keypairs    []string
 	Licenses    []ServerLicense
+	UserData    string
 }
 
 // CreateServer creates an instance and returns its ID. All the awkward inline-struct
@@ -115,6 +116,9 @@ func (c *Client) CreateServer(ctx context.Context, p ServerCreateParams) (string
 	}
 	if len(p.Keypairs) > 0 {
 		body.Keypairs = &p.Keypairs
+	}
+	if p.UserData != "" {
+		body.UserData = &p.UserData
 	}
 
 	if len(p.Storages) > 0 {

@@ -16,4 +16,11 @@ resource "clo_compute_instance" "myserv" {
     external        = true
     ddos_protection = false
   }
+  # cloud-init configuration passed to the instance on the first boot.
+  user_data = base64encode(<<-EOT
+    #cloud-config
+    packages:
+      - curl
+  EOT
+  )
 }
